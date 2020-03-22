@@ -1,3 +1,3 @@
-module github.com/mehix/go/ReadmeTOC
+module github.com/mehiX/ReadmeTOC
 
 go 1.14
