@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  readmetoc:
+    image: readmetoc
+    build:
+      context: .
+      dockerfile: Dockerfile
