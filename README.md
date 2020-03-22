@@ -22,7 +22,7 @@ Generates the table of contents for a markdown file, based on its headings.
 git clone https://github.com/mehiX/ReadmeTOC.git
 cd ReadmeTOC
 go build
-./ReadmeTOC <filepath>
+./ReadmeTOC FILEPATH | URL
 ```
 
 ## Programming language
@@ -31,7 +31,7 @@ Writen in GO
 ## Input and Output
 
 ### Input
-Receives a path to a Markdown file. More help with `-help`
+Receives a url or file path to a Markdown document. More help with `-help`
 
 ### Output
 Prints out the table of contents. This can be then pasted inside the original file.

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 	"os"
 	"regexp"
 	"strings"
@@ -14,7 +15,7 @@ import (
 var (
 	titleMatcher     *regexp.Regexp
 	codeBlockMatcher *regexp.Regexp
-	filepath         string
+	url              string
 
 	help = flag.Bool("help", false, "Print this message")
 )
@@ -24,14 +25,15 @@ func init() {
 	flag.Parse()
 
 	if *help || len(flag.Args()) != 1 {
-		fmt.Fprintf(os.Stdout, "Usage: %s [-help] <filepath>\n", os.Args[0])
+		fmt.Fprintf(os.Stdout, "Usage: %s [-help] FILEPATH | URL\n", os.Args[0])
 		flag.PrintDefaults()
 		os.Exit(0)
 	}
 
-	filepath = flag.Arg(0)
-
 	var err error
+
+	url = flag.Arg(0)
+
 	titleMatcher, err = regexp.CompilePOSIX("^[#]{1,} [A-Z0-9]{1,}")
 	if nil != err {
 		log.Panicln(err)
@@ -45,15 +47,28 @@ func init() {
 
 func main() {
 
-	// open the file
-	fh, err := os.Open(filepath)
-	if nil != err {
-		log.Panicln(err)
+	var r io.ReadCloser
+	var err error
+
+	var resp *http.Response
+
+	if resp, err = http.Get(url); nil == err {
+		if http.StatusOK != resp.StatusCode {
+			log.Panicf("Document not found: %s", url)
+		}
+		r = resp.Body
+	} else {
+		fmt.Fprintf(os.Stderr, "URL error: %v", err)
+		// open the file
+		r, err = os.Open(url)
+		if nil != err {
+			log.Panicln(err)
+		}
 	}
 
-	defer fh.Close()
+	defer r.Close()
 
-	generateTOC(os.Stdout, fh)
+	generateTOC(os.Stdout, r)
 }
 
 func generateTOC(w io.Writer, r io.Reader) {
