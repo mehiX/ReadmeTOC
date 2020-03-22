@@ -19,7 +19,7 @@ Generates the table of contents for a markdown file, based on its headings.
 
 ## Usage
 ```bash
-git clone https://github.com/mehix/go/ReadmeTOC.git
+git clone https://github.com/mehiX/ReadmeTOC.git
 cd ReadmeTOC
 go build
 ./ReadmeTOC <filepath>
