@@ -4,3 +4,6 @@ services:
   readmetoc:
     image: readmetoc:1.0
     build: .
+    ports: 
+      - 8080:8080
+    command: "-serve :8080"

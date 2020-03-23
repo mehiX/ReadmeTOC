@@ -56,8 +56,9 @@ func startServer() {
 
 	handler := mux.NewRouter()
 
-	handler.HandleFunc("/", handlers.HandleQueryParam).Methods(http.MethodGet)
+	handler.HandleFunc("/query", handlers.HandleQueryParam).Methods(http.MethodGet)
 	handler.HandleFunc("/json", handlers.HandleJSON).Methods(http.MethodGet)
 
+	fmt.Println("Listening...")
 	log.Fatal(http.ListenAndServe(*serve, handler))
 }

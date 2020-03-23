@@ -7,53 +7,69 @@
     1. [Table of contents](#table-of-contents)
     2. [Description](#description)
     3. [Programming language](#programming-language)
-    4. [Usage](#usage)
-        1. [Provide URL on command line](#provide-url-on-command-line)
-            1. [Input and Output](#input-and-output)
-                1. [Input](#input)
-                2. [Output](#output)
+    4. [Build the project](#build-the-project)
+    5. [Usage](#usage)
+        1. [Run it for only one file](#run-it-for-only-one-file)
         2. [Run as webserver](#run-as-webserver)
-    5. [Docker](#docker)
+    6. [Build and run with Docker](#build-and-run-with-docker)
 <!-- GENERATED TOC -->
 
 ## Description
-Generates the table of contents for a markdown file, based on its headings.
+Generates the table of contents for a markdown document, based on its headings. Can be used in 2 ways:
+* as a web-server accepting a URL path to the location of the document
+* as a one off for local files or remote URL's
 
 ## Programming language
 Writen in GO
 
-## Usage
+## Build the project
 ```bash
 git clone https://github.com/mehiX/ReadmeTOC.git
 cd ReadmeTOC
+go get -d -v ./...
 go build
 ```
 
-### Provide URL on command line
+## Usage
+
+### Run it for only one file
+The path parameter can be a local file or a URL
+
 ```bash
 ./ReadmeTOC -path URL
 ```
 
-#### Input and Output
-
-##### Input
-Receives a url or file path to a Markdown document. More help with `-help`
-
-##### Output
 Prints out the table of contents. This can be then pasted inside the original file.
 
 
 ### Run as webserver
+
 ```bash
 # Listen on 0.0.0.0:8080
 ./ReadmeTOC -serve :8080
 ```
 
-## Docker
+The URL can be passed as a query parameter:
+
+```bash
+curl http://localhost:8080/query?path=https://raw.githubusercontent.com/mehiX/ReadmeTOC/master/README.md
+```
+
+or it can be send as part of a json request body:
+
+```bash
+curl -v -X GET \
+  -d '{"url":"https://raw.githubusercontent.com/mehiX/ReadmeTOC/master/README.md"}' \
+  -H "Content-Type: application/json" \
+  http://localhost:8080/json
+```
+
+
+## Build and run with Docker
 
 ```bash
 # Build the image
 docker build -t readmetoc:1.0 .
-# Run the container
+# Run the container for 1 file
 docker run -ti --rm -v $(pwd)/README.md:/tmp/README.md readmetoc:1.0 /tmp/README.md
 ```
