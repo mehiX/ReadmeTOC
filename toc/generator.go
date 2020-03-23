@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"regexp"
 	"strings"
@@ -17,15 +18,24 @@ var (
 	codeBlockMatcher = regexp.MustCompilePOSIX("^[`]{3}")
 )
 
-func NewGenerator(url string) *generator {
+func NewGenerator(path string) *generator {
+
+	pathURL, err := url.Parse(path)
+	if nil != err {
+		log.Panic(err)
+	}
+
 	return &generator{
-		URL: url,
+		URL:   *pathURL,
+		Local: pathURL.Scheme == "",
 	}
 }
 
 type generator struct {
-	URL string
+	URL url.URL
 	ToC string
+
+	Local bool
 }
 
 func (g *generator) Generate() {
@@ -34,17 +44,17 @@ func (g *generator) Generate() {
 
 	var resp *http.Response
 
-	if resp, err = http.Get(g.URL); nil == err {
-		if http.StatusOK != resp.StatusCode {
-			log.Panicf("Document not found: %s", g.URL)
-		}
-		r = resp.Body
-	} else {
-		fmt.Fprintf(os.Stderr, "URL error: %v", err)
-		// open the file
-		r, err = os.Open(g.URL)
+	if g.Local {
+		r, err = os.Open(g.URL.String())
 		if nil != err {
 			log.Panicln(err)
+		}
+	} else {
+		if resp, err = http.Get(g.URL.String()); nil == err {
+			if http.StatusOK != resp.StatusCode {
+				log.Panicf("Document not found: %s", g.URL.String())
+			}
+			r = resp.Body
 		}
 	}
 

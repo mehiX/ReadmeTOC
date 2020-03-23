@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/mehiX/ReadmeTOC/toc"
+	"github.com/mehiX/ReadmeTOC/toc/handlers"
 )
 
 var (
@@ -56,55 +56,8 @@ func startServer() {
 
 	handler := mux.NewRouter()
 
-	handler.HandleFunc("/", handleQueryParam).Methods(http.MethodGet)
-	handler.HandleFunc("/json", handleJSON).Methods(http.MethodGet)
+	handler.HandleFunc("/", handlers.HandleQueryParam).Methods(http.MethodGet)
+	handler.HandleFunc("/json", handlers.HandleJSON).Methods(http.MethodGet)
 
 	log.Fatal(http.ListenAndServe(*serve, handler))
-}
-
-func handleQueryParam(w http.ResponseWriter, r *http.Request) {
-
-	url := r.URL.Query().Get("path")
-
-	if "" == url {
-		http.Error(w, "Missing query parameter: path", http.StatusBadRequest)
-		return
-	}
-
-	generator := toc.NewGenerator(url)
-
-	generator.Generate()
-
-	w.Header().Set("Content-type", "text/plain")
-	fmt.Fprint(w, generator.ToC)
-}
-
-type data struct {
-	URL string `json:"url"`
-	Toc string `json:"toc"`
-}
-
-func handleJSON(w http.ResponseWriter, r *http.Request) {
-
-	var d data
-
-	if err := json.NewDecoder(r.Body).Decode(&d); nil != err {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	defer r.Body.Close()
-
-	generator := toc.NewGenerator(d.URL)
-
-	generator.Generate()
-
-	d.Toc = generator.ToC
-
-	w.Header().Set("Content-type", "application/json")
-
-	if err := json.NewEncoder(w).Encode(d); nil != err {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-
 }
