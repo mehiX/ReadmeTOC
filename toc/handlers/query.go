@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	"html/template"
 	"net/http"
 
 	"github.com/mehiX/ReadmeTOC/toc"
@@ -20,6 +20,12 @@ func HandleQueryParam(w http.ResponseWriter, r *http.Request) {
 
 	generator.Generate()
 
-	w.Header().Set("Content-type", "text/plain")
-	fmt.Fprint(w, generator.ToC)
+	w.Header().Set("Content-type", "text/html")
+
+	d := Data{
+		URL: url,
+		Toc: generator.ToC,
+	}
+
+	template.Must(template.ParseFiles("tmpl/home.html")).Execute(w, d)
 }

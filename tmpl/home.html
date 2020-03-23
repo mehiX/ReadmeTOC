@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>TOC Generator</title>
+    <style>
+        .container {
+            margin: auto;
+            width: 70%;
+            padding: 10px;
+        }
+
+        .container input {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            padding: 5px 10px;
+            font-size: 18px;
+            border: 1px solid lightblue;
+            border-radius: 0.5em;
+            outline: none;
+        }
+
+        .container textarea {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+            width: 100%;
+            min-height: 400px;
+            padding: 10px 10px;
+            font-size: 14px;
+            border: 0;
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form action="/query" method="get">
+            <input type="text" name="path" id="path" placeholder="https://" value="{{ .URL }}">
+        </form>
+        {{ if .Toc }}
+        <textarea name="results" disabled>{{ .Toc }}</textarea>
+        {{ end }}
+    </div>
+</body>
+
+</html>

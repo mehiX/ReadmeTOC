@@ -20,9 +20,7 @@ var (
 
 /*
 TODO
-make it into a webserver if it receives a flag -listen with a port number
-receive json or query param with url to README
-respond with TOC
+add homepage
 
 insert TOC under predefined tags or under "## Table of Contents" and return the full ReadME
 */
@@ -56,6 +54,7 @@ func startServer() {
 
 	handler := mux.NewRouter()
 
+	handler.HandleFunc("/", handlers.Home).Methods(http.MethodGet)
 	handler.HandleFunc("/query", handlers.HandleQueryParam).Methods(http.MethodGet)
 	handler.HandleFunc("/json", handlers.HandleJSON).Methods(http.MethodGet)
 

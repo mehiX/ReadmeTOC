@@ -47,12 +47,14 @@ func (g *generator) Generate() {
 	if g.Local {
 		r, err = os.Open(g.URL.String())
 		if nil != err {
-			log.Panicln(err)
+			g.ToC = err.Error()
+			return
 		}
 	} else {
 		if resp, err = http.Get(g.URL.String()); nil == err {
 			if http.StatusOK != resp.StatusCode {
-				log.Panicf("Document not found: %s", g.URL.String())
+				g.ToC = fmt.Sprintf("Document not found: %s", g.URL.String())
+				return
 			}
 			r = resp.Body
 		}

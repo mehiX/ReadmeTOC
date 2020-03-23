@@ -11,6 +11,7 @@ RUN go install -v ./...
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 COPY --from=builder /go/bin/ReadmeTOC /app
+COPY tmpl ./tmpl/
 ENTRYPOINT ["./app"]
 CMD ["-help"]
 LABEL Name=readmetoc Version=0.0.1
