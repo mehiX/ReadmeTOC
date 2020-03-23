@@ -18,27 +18,23 @@ var (
 	codeBlockMatcher = regexp.MustCompilePOSIX("^[`]{3}")
 )
 
-func NewGenerator(path string) *generator {
+// NewGenerator creates a new generator based on a path
+// the path can be local or a URL
+func NewGenerator(path string) *Generator {
 
 	pathURL, err := url.Parse(path)
 	if nil != err {
 		log.Panic(err)
 	}
 
-	return &generator{
+	return &Generator{
 		URL:   *pathURL,
 		Local: pathURL.Scheme == "",
 	}
 }
 
-type generator struct {
-	URL url.URL
-	ToC string
-
-	Local bool
-}
-
-func (g *generator) Generate() {
+// Generate read the document and generate the ToC
+func (g *Generator) Generate() {
 	var r io.ReadCloser
 	var err error
 
@@ -47,13 +43,13 @@ func (g *generator) Generate() {
 	if g.Local {
 		r, err = os.Open(g.URL.String())
 		if nil != err {
-			g.ToC = err.Error()
+			g.Error = err.Error()
 			return
 		}
 	} else {
 		if resp, err = http.Get(g.URL.String()); nil == err {
 			if http.StatusOK != resp.StatusCode {
-				g.ToC = fmt.Sprintf("Document not found: %s", g.URL.String())
+				g.Error = fmt.Sprintf("Document not found: %s", g.URL.String())
 				return
 			}
 			r = resp.Body

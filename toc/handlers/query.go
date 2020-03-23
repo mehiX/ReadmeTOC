@@ -7,6 +7,8 @@ import (
 	"github.com/mehiX/ReadmeTOC/toc"
 )
 
+// HandleQueryParam reads the query parameter (path) and
+// responds with an html template
 func HandleQueryParam(w http.ResponseWriter, r *http.Request) {
 
 	url := r.URL.Query().Get("path")
@@ -22,9 +24,10 @@ func HandleQueryParam(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-type", "text/html")
 
-	d := Data{
-		URL: url,
-		Toc: generator.ToC,
+	d := toc.ResponseData{
+		URL:   url,
+		Toc:   generator.ToC,
+		Error: generator.Error,
 	}
 
 	template.Must(template.ParseFiles("tmpl/home.html")).Execute(w, d)

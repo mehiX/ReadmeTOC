@@ -35,6 +35,10 @@
             border: 0;
             outline: none;
         }
+
+        .error {
+            color: red;
+        }
     </style>
 </head>
 
@@ -43,6 +47,9 @@
         <form action="/query" method="get">
             <input type="text" name="path" id="path" placeholder="https://" value="{{ .URL }}">
         </form>
+        {{ if ne "" .Error }}
+        <p class="error">{{ .Error }}</p>
+        {{ end }}
         {{ if .Toc }}
         <textarea name="results" disabled>{{ .Toc }}</textarea>
         {{ end }}

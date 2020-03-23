@@ -7,15 +7,10 @@ import (
 	"github.com/mehiX/ReadmeTOC/toc"
 )
 
-type Data struct {
-	URL string `json:"url"`
-	Toc string `json:"toc"`
-}
-
 // HandleJSON receives a JSON object in the form {"url": ""} and returns {"url": "...", "toc": "..."}
 func HandleJSON(w http.ResponseWriter, r *http.Request) {
 
-	var d Data
+	var d toc.ResponseData
 
 	if err := json.NewDecoder(r.Body).Decode(&d); nil != err {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -29,6 +24,7 @@ func HandleJSON(w http.ResponseWriter, r *http.Request) {
 	generator.Generate()
 
 	d.Toc = generator.ToC
+	d.Error = generator.Error
 
 	w.Header().Set("Content-type", "application/json")
 
