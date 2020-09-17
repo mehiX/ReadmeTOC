@@ -10,21 +10,27 @@ RUN go install -v ./cmd/http/*.go
 
 #final stage
 FROM alpine:latest
+
+ARG USER=toc
+
 RUN apk --no-cache add ca-certificates
 # Create a new user with no rights
-RUN adduser --disabled-password --no-create-home --shell /no-shell toc
+RUN adduser --disabled-password --no-create-home --shell /no-shell ${USER}
 
 WORKDIR /usr/local/app
 
-COPY --from=builder --chown=toc /go/bin/toc ./
-COPY --from=builder --chown=toc /go/bin/server ./
-COPY --chown=toc templates ./templates/
+COPY --from=builder --chown=${USER} /go/bin/toc ./
+COPY --from=builder --chown=${USER} /go/bin/server ./
+COPY --chown=${USER} templates ./templates/
 
 RUN chmod 100 -R ./*
 RUN chmod 500 -R ./templates
 
+# Remove all users expect application user
+RUN sed -i "/^${USER}:/!d" /etc/passwd
+
 # Run unprivileged from here on
-USER toc
+USER ${USER}
 
 ENTRYPOINT ["./server"]
 LABEL Name=readmetoc Version=0.0.1
