@@ -27,7 +27,10 @@ Writen in GO
 git clone https://github.com/mehiX/ReadmeTOC.git
 cd ReadmeTOC
 go get -d -v ./...
-go build
+# command line
+go build ./cmd/cli/*.go
+# http server
+go build ./cmd/http/*.go
 ```
 
 ## Usage
@@ -36,7 +39,7 @@ go build
 The path parameter can be a local file or a URL
 
 ```bash
-./ReadmeTOC -path URL
+./toc URL
 ```
 
 Prints out the table of contents. This can be then pasted inside the original file.
@@ -46,7 +49,7 @@ Prints out the table of contents. This can be then pasted inside the original fi
 
 ```bash
 # Listen on 0.0.0.0:8080
-./ReadmeTOC -serve :8080
+./server :8080
 ```
 
 The URL can be passed as a query parameter:
@@ -69,7 +72,20 @@ curl -v -X GET \
 
 ```bash
 # Build the image
-docker build -t readmetoc:1.0 .
-# Run the container for 1 file
-docker run -ti --rm -v $(pwd)/README.md:/tmp/README.md readmetoc:1.0 /tmp/README.md
+docker build -t readmetoc:1.1 .
+
+# Run the container for 1 file (local)
+docker run \
+  -t \
+  --rm \
+  -v $(pwd)/README.md:/tmp/README.md \
+  --entrypoint "/app/toc"
+  readmetoc:1.1 /tmp/README.md
+
+# Run for a URL
+docker run \
+  -t \
+  --rm \
+  --entrypoint "/app/toc" \
+  readmetoc:1.1 https://github.com/mehiX/ReadmeTOC/raw/master/README.md
 ```

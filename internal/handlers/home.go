@@ -7,5 +7,5 @@ import (
 
 // Home handler that returns the homepage based on an html template
 func Home(w http.ResponseWriter, r *http.Request) {
-	template.Must(template.ParseFiles("tmpl/home.html")).Execute(w, nil)
+	template.Must(template.ParseFiles("templates/home.html")).Execute(w, nil)
 }

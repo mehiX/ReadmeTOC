@@ -44,9 +44,11 @@
 
 <body>
     <div class="container">
+        <h3>Markdown document:</h3>
         <form action="/query" method="get">
             <input type="text" name="path" id="path" placeholder="https://" value="{{ .URL }}">
         </form>
+        <h3>TOC:</h3>
         {{ if ne "" .Error }}
         <p class="error">{{ .Error }}</p>
         {{ end }}

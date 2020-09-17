@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/mehiX/ReadmeTOC/toc"
+	"github.com/mehiX/ReadmeTOC/internal"
 )
 
 // HandleQueryParam reads the query parameter (path) and
@@ -18,17 +18,17 @@ func HandleQueryParam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	generator := toc.NewGenerator(url)
+	generator := internal.NewGenerator(url)
 
 	generator.Generate()
 
 	w.Header().Set("Content-type", "text/html")
 
-	d := toc.ResponseData{
+	d := internal.ResponseData{
 		URL:   url,
 		Toc:   generator.ToC,
 		Error: generator.Error,
 	}
 
-	template.Must(template.ParseFiles("tmpl/home.html")).Execute(w, d)
+	template.Must(template.ParseFiles("templates/home.html")).Execute(w, d)
 }

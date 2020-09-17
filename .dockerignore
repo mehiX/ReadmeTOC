@@ -2,5 +2,6 @@
 !main.go
 !go.mod
 !go.sum
-!toc/
-!tmpl/
+!cmd/
+!internal/
+!templates/

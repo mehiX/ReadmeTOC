@@ -5,14 +5,16 @@ WORKDIR /go/src/app
 COPY . .
 RUN apk add --no-cache git
 RUN go get -d -v ./...
-RUN go install -v ./...
+RUN go install -v ./cmd/cli/*.go
+RUN go install -v ./cmd/http/*.go
 
 #final stage
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
-COPY --from=builder /go/bin/ReadmeTOC /app
-COPY tmpl ./tmpl/
-ENTRYPOINT ["./app"]
-CMD ["-help"]
+WORKDIR /app
+COPY --from=builder /go/bin/toc ./
+COPY --from=builder /go/bin/server ./
+COPY templates ./templates/
+ENTRYPOINT ["/app/server"]
 LABEL Name=readmetoc Version=0.0.1
 

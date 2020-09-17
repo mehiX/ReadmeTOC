@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/mehiX/ReadmeTOC/toc"
+	"github.com/mehiX/ReadmeTOC/internal"
 )
 
 // HandleJSON receives a JSON object in the form {"url": ""} and returns {"url": "...", "toc": "..."}
 func HandleJSON(w http.ResponseWriter, r *http.Request) {
 
-	var d toc.ResponseData
+	var d internal.ResponseData
 
 	if err := json.NewDecoder(r.Body).Decode(&d); nil != err {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -19,7 +19,7 @@ func HandleJSON(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	generator := toc.NewGenerator(d.URL)
+	generator := internal.NewGenerator(d.URL)
 
 	generator.Generate()
 

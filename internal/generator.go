@@ -1,4 +1,4 @@
-package toc
+package internal
 
 import (
 	"bufio"
