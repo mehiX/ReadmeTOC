@@ -10,7 +10,7 @@ import (
 
 func main() {
 	if 2 != len(os.Args) {
-		fmt.Printf("Usage: %s path", filepath.Base(os.Args[0]))
+		fmt.Printf("Usage: %s path\n", filepath.Base(os.Args[0]))
 		os.Exit(1)
 	}
 

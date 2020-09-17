@@ -14,7 +14,7 @@ import (
 
 func main() {
 	if 2 != len(os.Args) {
-		fmt.Printf("Usage: %s addr", filepath.Base(os.Args[0]))
+		fmt.Printf("Usage: %s addr\n", filepath.Base(os.Args[0]))
 		os.Exit(1)
 	}
 

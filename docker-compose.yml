@@ -2,8 +2,8 @@ version: '3.4'
 
 services:
   readmetoc:
-    image: readmetoc:1.0
+    image: readmetoc:1.2
     build: .
     ports: 
-      - 8080:8080
-    command: "-serve :8080"
+      - 8080:1025
+    command: ":1025"

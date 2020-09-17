@@ -72,20 +72,30 @@ curl -v -X GET \
 
 ```bash
 # Build the image
-docker build -t readmetoc:1.1 .
+docker build -t readmetoc:1.2 .
+
+# Run as a webserver on host port 8888 (for example)
+# The user inside the container is unprivileged so make sure to 
+# use a port number > 1024
+docker run \
+  -d \
+  --rm \
+  -p 8888:1025 \
+  readmetoc:1.2 \
+  :1025
 
 # Run the container for 1 file (local)
 docker run \
   -t \
   --rm \
   -v $(pwd)/README.md:/tmp/README.md \
-  --entrypoint "/app/toc"
-  readmetoc:1.1 /tmp/README.md
+  --entrypoint "./toc"
+  readmetoc:1.2 /tmp/README.md
 
 # Run for a URL
 docker run \
   -t \
   --rm \
-  --entrypoint "/app/toc" \
-  readmetoc:1.1 https://github.com/mehiX/ReadmeTOC/raw/master/README.md
+  --entrypoint "./toc" \
+  readmetoc:1.2 https://github.com/mehiX/ReadmeTOC/raw/master/README.md
 ```
